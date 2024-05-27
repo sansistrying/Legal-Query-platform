@@ -43,12 +43,6 @@ The PDF Search Tool searches and queries information from PDF documents. Key fea
 - **Embeddings and Vector Search**: Uses OpenAI embeddings and FAISS vector search to find relevant documents based on user queries.
 - **Question Answering**: Implements a question-answering chain to provide precise answers from the relevant documents.
 
-**Usage Example:**
-```python
-pdf_tool = PDF_search()
-result = pdf_tool._run("Summarize the contract details from the PDFs.")
-print(result)
-```
 
 ### 3. Law Tasks
 **File:** law_tasks.py
@@ -59,12 +53,6 @@ This file defines various tasks related to legal document searches. Key features
 - **Web Search Task**: Creates tasks for conducting general web searches.
 - **PDF Search Task**: Creates tasks for searching information within PDF documents.
 
-**Usage Example:**
-```python
-tasks = Law_Tasks()
-task = tasks.website_search_task(agent, "Find latest legal updates.")
-print(task.description)
-```
 
 ### 4. Law Agents
 **File:** law_agents.py
@@ -75,12 +63,6 @@ This file defines agents specialized in legal document searches. Key features in
 - **Website Searcher**: An agent specialized in scouring legal websites and online databases for relevant information.
 - **Web Searcher**: An agent specialized in conducting web searches to retrieve legal information.
 
-**Usage Example:**
-```python
-agents = Law_Agents()
-pdf_agent = agents.pdf_searcher()
-print(pdf_agent.role)
-```
 
 ### 5. Law Crew
 **File:** law_crew.py
@@ -90,17 +72,7 @@ This file integrates agents and tasks to handle user queries through a streamlin
 - **Initialization**: Sets up agents and tasks based on user queries.
 - **Query Processing**: Processes user queries using the integrated agents and tasks.
 
-**Usage Example:**
-```python
-if __name__ == "__main__":
-    st.title("Law Query")
-    query = st.text_input("Question:")
-    if st.button("Submit"):
-        law_crew = Law_Crew(query)
-        result = law_crew.run()
-        st.write("Result:")
-        st.write(result)
-```
+
 
 ## Installation and Setup
 
