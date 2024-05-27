@@ -110,11 +110,6 @@ git clone https://github.com/your-repo/document-search-tools.git
 cd document-search-tools
 ```
 
-**Install Dependencies:**
-Ensure you have Python 3.8 or higher. Install required Python packages:
-```bash
-pip install -r requirements.txt
-```
 
 **Set Up API Keys:**
 Ensure you have your OpenAI API key set up in your environment:
@@ -129,16 +124,14 @@ export OPENAI_API_KEY='your-openai-api-key'
 
 ## Running the Tools
 
-- **Website Search Tool:**
+- **Running the Script:**: The script will leverage the CrewAI framework to process the idea and generate a landing page.
 ```bash
-python website_search_tools.py
-```
-
-- **PDF Search Tool:**
-```bash
-python pdf_search_tool.py
+streamlit run app.py
 ```
 
 ## Conclusion
 
 These tools are designed to streamline the process of extracting, storing, and querying information from websites and PDF documents. By leveraging advanced NLP techniques, they ensure that users can efficiently find and retrieve relevant information with ease. This project aims to significantly enhance productivity and decision-making processes within the organization.
+
+## License
+This project is released under the MIT License.
