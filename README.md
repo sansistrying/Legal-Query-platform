@@ -102,7 +102,8 @@ streamlit run app.py
 ```
 ## Contributors
 sansita(https://github.com/sansistrying)
-Palak ()
+
+Palak (https://github.com/palak180)
 ## Conclusion
 
 These tools are designed to streamline the process of extracting, storing, and querying information from websites and PDF documents. By leveraging advanced NLP techniques, they ensure that users can efficiently find and retrieve relevant information with ease. This project aims to significantly enhance productivity and decision-making processes within the organization.
