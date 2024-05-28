@@ -49,7 +49,7 @@ class Law_Crew:
 
 if __name__ == "__main__":
     # Entry point for the script
-    print("## Welcome to Law Query")
+    print("## Welcome to Legal Query Platform")
     print("-------------------------------")
     query = input("Enter your question: ")  # Get the user's query
     law_crew = Law_Crew(query)  # Instantiate the Law_Crew class with the query
