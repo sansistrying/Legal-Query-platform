@@ -100,7 +100,9 @@ export OPENAI_API_KEY='your-openai-api-key'
 ```bash
 streamlit run app.py
 ```
-
+## Contributors
+sansita(https://github.com/sansistrying)
+Palak ()
 ## Conclusion
 
 These tools are designed to streamline the process of extracting, storing, and querying information from websites and PDF documents. By leveraging advanced NLP techniques, they ensure that users can efficiently find and retrieve relevant information with ease. This project aims to significantly enhance productivity and decision-making processes within the organization.
