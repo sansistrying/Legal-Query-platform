@@ -46,7 +46,7 @@ class Law_Crew:
 
 if __name__ == "__main__":
     # Set up Streamlit app for user interaction
-    st.title("Law Query")
+    st.title("Legal Query Platform")
     st.write("Enter your question below:")
     query = st.text_input("Question:")
     if st.button("Submit"):
