@@ -101,7 +101,7 @@ export OPENAI_API_KEY='your-openai-api-key'
 streamlit run app.py
 ```
 ## Contributors
-sansita(https://github.com/sansistrying)
+Sansita(https://github.com/sansistrying)
 
 Palak (https://github.com/palak180)
 ## Conclusion
