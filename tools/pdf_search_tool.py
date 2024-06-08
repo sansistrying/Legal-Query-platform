@@ -1,54 +1,60 @@
 from crewai_tools import BaseTool
 import os
+from langchain.chains import RetrievalQA
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter, RecursiveCharacterTextSplitter
 from langchain_community.llms import OpenAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain_community.embeddings.openai import OpenAIEmbeddings
 from langchain_community.vectorstores import ElasticVectorSearch, Pinecone, Weaviate, FAISS
+from langchain_openai import ChatOpenAI
+from langchain_community.document_loaders import PyPDFDirectoryLoader
+from langchain_community.vectorstores import Qdrant
+from langchain.prompts import PromptTemplate
 
 class PDF_search(BaseTool):
-    # Define a class for the PDF search tool, inheriting from BaseTool
-    name: str = "PDF reader"
-    description: str = "Access the documents and answer the query"
+    name: str = "PDF reader"  # Name of the tool
+    description: str = "Access the documents and answer the query, also give the corresponding document name."  # Description of the tool
 
-    def _run(self, query: str) -> str:
-        # Step 1: Iterate through each folder in the specified directory
-        for folder in os.listdir(r"C:\Users\sansi\Downloads\Collyear Law"):
+    def _run(self, user_query: str) -> str:
+        # Load all PDF documents from the specified directory
+        loader = PyPDFDirectoryLoader(r"C:\Users\sansi\OneDrive\Desktop\Collyear_Law_Project\pdf")
+        documents = loader.load()
 
-            raw_text = ''  # Initialize variable to store raw text from PDFs
+        # Split the loaded documents into smaller chunks
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=0)
+        all_splits = text_splitter.split_documents(documents)
 
-            # Step 2: Iterate through each file in the folder
-            for filename in os.listdir(folder):
-                file_path = os.path.join(folder, filename)  # Get the full file path
-                reader = PdfReader(file_path)  # Initialize PdfReader object
-
-                # Step 3: Iterate through each page in the PDF
-                for i, page in enumerate(reader.pages):
-                    text = page.extract_text()  # Extract text from the page
-                    if text:
-                        raw_text += text  # Append extracted text to raw_text
-
-        # Step 4: Split the raw text into smaller chunks
-        text_splitter = CharacterTextSplitter(
-            separator="\n",
-            chunk_size=1000,
-            chunk_overlap=200,
-            length_function=len,
-        )
-        texts = text_splitter.split_text(raw_text)
-
-        # Step 5: Convert text chunks to embeddings
+        # Initialize OpenAI embeddings
         embeddings = OpenAIEmbeddings()
 
-        # Step 6: Create FAISS index from text embeddings
-        docsearch = FAISS.from_texts(texts, embeddings)
+        # Create a Qdrant vector store from the document splits
+        db = Qdrant.from_documents(all_splits, embeddings, location=":memory:", collection_name="all_splits", distance_func="Dot")
 
-        # Step 7: Load question answering chain
-        chain = load_qa_chain(OpenAI(), chain_type="stuff")
+        # Define the prompt template for the QA task
+        prompt_template = """Text: {context}
 
-        # Step 8: Search for relevant documents based on query
-        docs = docsearch.similarity_search(query)
+        Question: {question}
 
-        # Step 9: Run question answering chain on input documents and query
-        return chain.run(input_documents=docs, question=query)
+        Answer the question based on the PDF Document provided. If the text doesn't contain the answer, reply that the answer is not available.
+        Do Not Hallucinate"""
+
+        # Create a PromptTemplate object with the defined template
+        PROMPT = PromptTemplate(
+            template=prompt_template, input_variables=["context", "query"]
+        )
+        chain_type_kwargs = {"prompt": PROMPT}  # Additional keyword arguments for the chain
+
+        # Initialize the RetrievalQA chain with the specified LLM, retriever, and prompt
+        qa = RetrievalQA.from_chain_type(
+            llm=ChatOpenAI(temperature=0, model="gpt-3.5-turbo-0125", api_key="your-api-key"),
+            chain_type="stuff",
+            input_key='query',
+            retriever=db.as_retriever(),
+            chain_type_kwargs=chain_type_kwargs,
+            return_source_documents=True
+        )
+
+        # Pass the user query to the QA object and get the result
+        result = qa({'query': user_query})
+        return result  # Return the result
