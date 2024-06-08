@@ -1,54 +1,25 @@
 from crewai import Task
 from langchain_community.tools.tavily_search import TavilySearchResults
+from tools.website_search_tool import website_search
+from tools.pdf_search_tool import PDF_search
 
 class Law_Tasks():
-    def website_search_task(self, agent, query):
-        """
-        Create a task for website search.
-
-        Args:
-            agent: The agent responsible for executing the task.
-            query (str): The query to search for on the website.
-
-        Returns:
-            Task: A task object for website search.
-        """
+    def website_search_task(self,agent,query):
         return Task(
-            description=f'Find an answer to the query asked by searching the data that we have stored and analyze. Your final answer should be a detailed and brief reply to the query. The query is as follows: "{query}"',
-            expected_output='A well described and brief answer to the query asked.',
-            agent=agent
+            description = 'Find answer to query asked. Query is as follows, {query}',
+            expected_output = 'An answer to the question in 2 to 3 lines',
+            agent = agent
         )
-
-    def web_search_task(self, agent, query):
-        """
-        Create a task for web search.
-
-        Args:
-            agent: The agent responsible for executing the task.
-            query (str): The query to search for on the web.
-
-        Returns:
-            Task: A task object for web search.
-        """
+    def web_search_task(self,agent,query):
         return Task(
-            description=f'Find an answer to the query asked by searching the web. Your final answer should be a detailed and brief reply to the query. The query is as follows: "{query}"',
-            expected_output='A well described and brief answer to the query asked.',
-            agent=agent
-        )
-
-    def pdf_search_task(self, agent, query):
-        """
-        Create a task for PDF search.
-
-        Args:
-            agent: The agent responsible for executing the task.
-            query (str): The query to search for in PDF documents.
-
-        Returns:
-            Task: A task object for PDF search.
-        """
+            description = 'Find answer to query asked. Query is as follows, {query}',
+            expected_output = 'An answer to the question in 2 to 3 lines and a list of the urls from where the content was taken from.',
+            agent = agent   )
+    
+    def pdf_search_task(self,agent,query):      
         return Task(
-            description=f'Find an answer to the query asked by searching the PDFs. Your final answer should be a detailed and brief reply to the query. The query is as follows: "{query}"',
-            expected_output='A well described and brief answer to the query asked.',
-            agent=agent
+            description = 'Find answer to query by using the tool and searching for answer in the given content. Query is as follows, {query}. Give the source of the answer as well',
+            expected_output = 'An answer to the question in 2 to 3 lines.',
+            agent = agent
         )
+    
