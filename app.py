@@ -1,57 +1,89 @@
-import os  # Importing necessary modules and libraries
+import os
 import streamlit as st
+from crewai import Task
 from agents import Law_Agents
 from tasks import Law_Tasks
 from crewai import Crew, Process
-from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
+from streamlit_chat import message
 
-load_dotenv()  # Load environment variables from .env file
+load_dotenv()
+
+# Setting Environment Variables
+os.environ["OPENAI_API_KEY"] = "your-api-key"
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
+os.environ["LANGCHAIN_API_KEY"] = "your-api-key"
+os.environ["TAVILY_API_KEY"] = "your-api-key"
 
 class Law_Crew:
     def __init__(self, query):
-        self.query = query  # Initialize with user query
+        self.query = query  # Initialize the class with the query
 
     def run(self):
-        # Initialize agents and tasks for law-related queries
+        # Instantiate the Law_Agents and Law_Tasks classes
         agents = Law_Agents()
         tasks = Law_Tasks()
+
+        # Create individual search agents
         pdf_searcher = agents.pdf_searcher()
         website_searcher = agents.website_searcher()
         web_searcher = agents.web_searcher()
+        master_agent = agents.master_agent()
 
-        # Define tasks based on user query
+        # Create tasks for each search agent with the query
         website_search_task = tasks.website_search_task(website_searcher, self.query)
         web_search_task = tasks.web_search_task(web_searcher, self.query)
         pdf_search_task = tasks.pdf_search_task(pdf_searcher, self.query)
 
-        # Configure and manage the crew for handling queries
-        crew = Crew(
-            agents=[website_searcher, pdf_searcher, web_searcher],
-            tasks=[website_search_task, pdf_search_task, web_search_task],
-            verbose=1,
-            full_output=False,
-            manager_llm=ChatOpenAI(
-                temperature=0,
-                model="gpt-3.5-turbo-0125",
-                api_key=os.environ["OPENAI_API_KEY"],
-            ),
-            process=Process.hierarchical,
-            memory=True,
+        # Define the master task that summarizes the content
+        master_task = Task(
+            description='summarize the content given to you and add the details such as article number or citation of a law etc in the answer from the content',
+            expected_output='An answer to the question in 2 to 3 lines and be in detail.',
+            agent=master_agent,
+            context=[website_search_task, web_search_task, pdf_search_task]
         )
 
-        # Process user query using the crew
-        result = crew.kickoff(inputs={"query": self.query})
-        return result
+        # Create a crew with the defined agents and tasks
+        crew = Crew(
+            agents=[master_agent],
+            tasks=[website_search_task, pdf_search_task, web_search_task, master_task],
+            verbose=1,  # Enable verbose output for debugging
+            full_output=True,  # Enable full output logging
+            process=Process.sequential,  # Run tasks sequentially
+            output_log_file=True,  # Enable output logging to a file
+        )
 
-if __name__ == "__main__":
-    # Set up Streamlit app for user interaction
-    st.title("Legal Query Platform")
-    st.write("Enter your question below:")
-    query = st.text_input("Question:")
-    if st.button("Submit"):
-        # Create Law_Crew instance and run query
-        trip_crew = Law_Crew(query)
-        result = trip_crew.run()
-        st.write("Result:")
-        st.write(result)
+        # Run the crew with the input query and return the result
+        result = crew.kickoff(inputs={'query': self.query})
+        
+        return master_task.output.exported_output  # Return the summarized result
+
+# Streamlit app setup
+st.title("Law Query Chatbot")  # Set the title of the Streamlit app
+st.write('Ask any law-related question and get a detailed answer!')  # Description of the app
+
+# Initialize the session state for storing messages if not already initialized
+if 'messages' not in st.session_state:
+    st.session_state.messages = []
+
+# Get user query input
+user_query = st.text_input("You:")
+
+if user_query:
+    # Append user query to messages in session state
+    st.session_state.messages.append({"message": user_query, "is_user": True})
+    
+    # Process the query with Law_Crew
+    law_crew = Law_Crew(user_query)
+    result = law_crew.run()
+    
+    # Append the result to messages in session state
+    st.session_state.messages.append({"message": result, "is_user": False})
+
+# Display messages in the chat interface
+for msg in st.session_state.messages:
+    if msg["is_user"]:
+        message(msg["message"], is_user=True)  # Display user messages
+    else:
+        message(msg["message"], is_user=False)  # Display bot responses
