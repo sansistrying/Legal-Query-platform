@@ -25,12 +25,6 @@ The Website Search Tool scrapes website content, stores it, and makes it searcha
 - **Embeddings and Vector Search**: Utilizes OpenAI embeddings and FAISS vector search to find relevant documents based on user queries.
 - **Question Answering**: Implements a question-answering chain to provide precise answers from the relevant documents.
 
-**Usage Example:**
-```python
-website_tool = website_search()
-result = website_tool._run("What is the latest update on the website?")
-print(result)
-```
 
 ### 2. PDF Search Tool
 **File:** pdf_search_tool.py
