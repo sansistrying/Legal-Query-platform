@@ -9,12 +9,20 @@ from streamlit_chat import message
 
 load_dotenv()
 
-# Setting Environment Variables
-os.environ["OPENAI_API_KEY"] = "your-api-key"
-os.environ["LANGCHAIN_TRACING_V2"] = "true"
-os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
-os.environ["LANGCHAIN_API_KEY"] = "your-api-key"
-os.environ["TAVILY_API_KEY"] = "your-api-key"
+# Groq API base_url 
+os.environ["OPENAI_API_BASE"] = 'https://api.groq.com/openai/v1' 
+
+# Model you wish to use, see https://console.groq.com/docs/models 
+os.environ["OPENAI_MODEL_NAME"] = 'llama3-70b-8192' 
+
+# Your Groq API key
+os.environ["OPENAI_API_KEY"] = 'api-key'  
+
+os.environ["GROQ_API_KEY"] = 'api-key'  
+
+os.environ["TAVILY_API_KEY"] = 'api-key'  
+os.environ["AI21_API_KEY"] = 'api-key'  
+
 
 class Law_Crew:
     def __init__(self, query):
@@ -38,7 +46,7 @@ class Law_Crew:
 
         # Define the master task that summarizes the content
         master_task = Task(
-            description='summarize the content given to you and add the details such as article number or citation of a law etc in the answer from the content',
+            description='summarize the content given to you and add the details in the answer from the content',
             expected_output='An answer to the question in 2 to 3 lines and be in detail.',
             agent=master_agent,
             context=[website_search_task, web_search_task, pdf_search_task]
@@ -47,7 +55,7 @@ class Law_Crew:
         # Create a crew with the defined agents and tasks
         crew = Crew(
             agents=[master_agent],
-            tasks=[website_search_task, pdf_search_task, web_search_task, master_task],
+            tasks=[pdf_search_task, website_search_task, web_search_task, master_task],
             verbose=1,  # Enable verbose output for debugging
             full_output=True,  # Enable full output logging
             process=Process.sequential,  # Run tasks sequentially
@@ -59,7 +67,7 @@ class Law_Crew:
         
         return master_task.output.exported_output  # Return the summarized result
 
-# Streamlit app setup
+#Streamlit app setup
 st.title("Law Query Chatbot")  # Set the title of the Streamlit app
 st.write('Ask any law-related question and get a detailed answer!')  # Description of the app
 
