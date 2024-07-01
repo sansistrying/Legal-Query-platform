@@ -23,19 +23,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-# Groq API base_url 
-os.environ["OPENAI_API_BASE"] = 'https://api.groq.com/openai/v1' 
-
-# Model you wish to use, see https://console.groq.com/docs/models 
-os.environ["OPENAI_MODEL_NAME"] = 'llama3-70b-8192' 
-
-# Your Groq API key
-os.environ["OPENAI_API_KEY"] = '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'  
-os.environ["GROQ_API_KEY"] = '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'  
-
-os.environ["TAVILY_API_KEY"] = "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"
-os.environ["AI21_API_KEY"] = "x1WB5Ld48GPBn8jlzG3T1dsuJvd8R0Ny"
-
 
 class Law_Crew:
     def __init__(self, query):
