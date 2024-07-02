@@ -13,16 +13,6 @@ os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
 os.environ["LANGCHAIN_API_KEY"] = "your-api-key"
 os.environ["TAVILY_API_KEY"] = "your-api-key"
-import os
-from crewai import Task
-from agents import Law_Agents
-from tasks import Law_Tasks
-from crewai import Crew, Process
-import streamlit as st
-from dotenv import load_dotenv
-load_dotenv()
-
-
 
 class Law_Crew:
     def __init__(self, query):
