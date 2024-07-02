@@ -15,7 +15,7 @@ from langchain.prompts import PromptTemplate
 from langchain_community.document_loaders import UnstructuredMarkdownLoader, JSONLoader, DirectoryLoader
 from langchain_community.vectorstores import Chroma
 
-from sentence_transformers import SentenceTransformer
+#from sentence_transformers import SentenceTransformer
 from qdrant_client import QdrantClient
 
 from langchain_ai21 import AI21Embeddings
