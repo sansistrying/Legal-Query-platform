@@ -24,7 +24,7 @@ class Law_Agents():
             )
     
     def web_searcher(self):
-        tavily=TavilySearchResults(k=3,max_results=5)
+        tavily=TavilySearchResults(k=3,max_results=2)
         return Agent(
             role='Legal Web Searcher',
             goal='To conduct web searches to retrieve legal information, providing responses to inquiries if possible. Do not hallucinate. Give the answer in just one try.',
