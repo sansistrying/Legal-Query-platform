@@ -9,22 +9,6 @@ from streamlit_chat import message
 
 load_dotenv()
 
-# Groq API base_url 
-os.environ["OPENAI_API_BASE"] = 'https://api.groq.com/openai/v1' 
-
-# Model you wish to use, see https://console.groq.com/docs/models 
-os.environ["OPENAI_MODEL_NAME"] = 'llama3-70b-8192' 
-
-# Your Groq API key
-os.environ["OPENAI_API_KEY"] = 'api-key'  
-
-os.environ["GROQ_API_KEY"] = 'api-key'  
-
-os.environ["TAVILY_API_KEY"] = 'api-key'  
-os.environ["AI21_API_KEY"] = 'api-key'  
-
-
-
 class Law_Crew:
     def __init__(self, query):
         self.query = query  # Initialize the class with the query
