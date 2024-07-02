@@ -24,6 +24,7 @@ os.environ["TAVILY_API_KEY"] = 'api-key'
 os.environ["AI21_API_KEY"] = 'api-key'  
 
 
+
 class Law_Crew:
     def __init__(self, query):
         self.query = query  # Initialize the class with the query
@@ -49,13 +50,13 @@ class Law_Crew:
             description='summarize the content given to you and add the details in the answer from the content',
             expected_output='An answer to the question in 2 to 3 lines and be in detail.',
             agent=master_agent,
-            context=[website_search_task, web_search_task, pdf_search_task]
+            context=[pdf_search_task]
         )
 
         # Create a crew with the defined agents and tasks
         crew = Crew(
             agents=[master_agent],
-            tasks=[pdf_search_task, website_search_task, web_search_task, master_task],
+            tasks=[pdf_search_task,master_task],
             verbose=1,  # Enable verbose output for debugging
             full_output=True,  # Enable full output logging
             process=Process.sequential,  # Run tasks sequentially
@@ -69,12 +70,11 @@ class Law_Crew:
 
 #Streamlit app setup
 st.title("Law Query Chatbot")  # Set the title of the Streamlit app
-st.write('Ask any law-related question and get a detailed answer!')  # Description of the app
+st.write('Ask law-related question and get a detailed answer!')  # Description of the app
 
 # Initialize the session state for storing messages if not already initialized
 if 'messages' not in st.session_state:
     st.session_state.messages = []
-
 # Get user query input
 user_query = st.text_input("You:")
 
