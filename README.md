@@ -7,7 +7,7 @@ This project provides powerful tools designed to facilitate efficient document s
 - **website_search_tools.py**: Tool for extracting and querying information from websites.
 - **pdf_search_tool.py**: Tool for extracting and querying information from PDF documents.
 - **law_tasks.py**: Defines tasks for website and PDF searches.
-- **law_agents.py**: Defines agents specialized in legal document searches.
+- **law_agents.py**: Defines agents specialized in legal document searches. 
 - **law_crew.py**: Integrates agents and tasks to handle user queries through a streamlined process.
 
 ## Tools Description
